@@ -1,7 +1,9 @@
+package src;
 import java.util.Scanner;
+import menu_list.*;
 
-public class Expenditure_Management_System {
-    public static void main(String[] args) {
+import static java.awt.SystemColor.menu;
+
         Scanner input = new Scanner(System.in);
 
         System.out.println("------Welcome To Nkwa Tracking App------\n");
@@ -10,6 +12,12 @@ public class Expenditure_Management_System {
                 "7.Generate report\n8. Exit\n:  ");
 
         int choice = input.nextInt();
+
+        switch (choice) {
+            case 1:
+
+
+        }
 
 
 
