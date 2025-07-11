@@ -5,27 +5,25 @@ import java.util.Scanner;
 public class addExpenditure {
     public static void spending(){
         Scanner s  = new Scanner(System.in);
-        System.out.println("\n-----Fill Up All Fileds");
+        System.out.println("\n-----Fill Up All Field-----");
 
-        System.out.println("Item code: ");
+        System.out.print("Item code: ");
         String code =  s.nextLine();
 
-        System.out.println("Amount: ");
+        System.out.print("Amount: ");
         double amount = Double.parseDouble(s.nextLine());
 
-        System.out.println("Date of issue: ");
+        System.out.print("Date of issue (YYYY‑MM‑DD): ");
         LocalDate date = LocalDate.parse(s.nextLine().trim());
 
-        System.out.println("Phase (Construction/Marketing.Sales: ");
+        System.out.print("Phase (Construction/Marketing.Sales: ");
         String phase =  s.nextLine();
 
-        System.out.println("Category");
+        System.out.print("Category");
         String category = s.nextLine();
 
-        System.out.println("Bank Account ID: ");
+        System.out.print("Bank Account ID: ");
         String account = s.nextLine();
-
-
 
 
 
