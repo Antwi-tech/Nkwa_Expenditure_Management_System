@@ -1,98 +1,62 @@
 package DSA;
 
-public class hashmap{
-       public static class Node<k, v>{
-              k key;
-              v value;
+public class hashmap<K, V> {
+       static class Node<K, V> {
+              K key;
+              V value;
+              Node<K, V> next;
 
-              Node<k, v> next;
+              Node(K key, V value) {
+                     this.key = key;
+                     this.value = value;
+              }
+       }
 
-              Node(k key, v value){
-                    this.key = key;
-                    this.value = value;
-                    this.next = null;
+       private final int SIZE = 16;
+       private Node<K, V>[] buckets;
+
+       @SuppressWarnings("unchecked")
+       public hashmap() {
+              buckets = new Node[SIZE];
+       }
+
+       private int getIndex(K key) {
+              return Math.abs(key.hashCode()) % SIZE;
+       }
+
+       public void put(K key, V value) {
+              int index = getIndex(key);
+              Node<K, V> head = buckets[index];
+
+              for (Node<K, V> curr = head; curr != null; curr = curr.next) {
+                     if (curr.key.equals(key)) {
+                            curr.value = value;
+                            return;
+                     }
               }
 
-              private final int SIZE = 16; // you can change this
-              private Node<k, v>[] buckets;
+              Node<K, V> newNode = new Node<>(key, value);
+              newNode.next = head;
+              buckets[index] = newNode;
+       }
 
-              @SuppressWarnings("unchecked")
-              public void MyHashMap() {
-                     buckets = new Node[SIZE]; // array of linked list heads
+       public V get(K key) {
+              int index = getIndex(key);
+              Node<K, V> curr = buckets[index];
+              while (curr != null) {
+                     if (curr.key.equals(key)) return curr.value;
+                     curr = curr.next;
               }
+              return null;
+       }
 
-              private int getIndex(k key) {
-                     return Math.abs(key.hashCode()) % SIZE;
-              }
-
-              public void put(k key, v value) {
-                     int index = getIndex(key);
-                     Node<k, v> head = buckets[index];
-
-                     Node<k, v> current = head;
+       public void printAll() {
+              for (int i = 0; i < SIZE; i++) {
+                     Node<K, V> current = buckets[i];
                      while (current != null) {
-                            if (current.key.equals(key)) {
-                                   current.value = value; // overwrite
-                                   return;
-                            }
+                            System.out.println(current.key + " => " + current.value);
                             current = current.next;
                      }
-
-                     // Insert new node at head
-                     Node<k, v> newNode = new Node<>(key, value);
-                     newNode.next = head;
-                     buckets[index] = newNode;
-              }
-
-              public v get(k key) {
-                     int index = getIndex(key);
-                     Node<k, v> current = buckets[index];
-
-                     while (current != null) {
-                            if (current.key.equals(key)) {
-                                   return current.value;
-                            }
-                            current = current.next;
-                     }
-
-                     return null; // not found
-              }
-
-              public boolean containsKey(k key) {
-                     return get(key) != null;
-              }
-
-              public void remove(k key) {
-                     int index = getIndex(key);
-                     Node<k, v> current = buckets[index];
-                     Node<k, v> prev = null;
-
-                     while (current != null) {
-                            if (current.key.equals(key)) {
-                                   if (prev == null) {
-                                          buckets[index] = current.next;
-                                   } else {
-                                          prev.next = current.next;
-                                   }
-                                   return;
-                            }
-
-                            prev = current;
-                            current = current.next;
-                     }
-              }
-
-              public void printAll() {
-                     for (int i = 0; i < SIZE; i++) {
-                            Node<k, v> current = buckets[i];
-                            while (current != null) {
-                                   System.out.println(current.key + " : " + current.value);
-                                   current = current.next;
-                            }
-
-
-                     }
-
               }
        }
 }
