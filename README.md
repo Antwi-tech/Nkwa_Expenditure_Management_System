@@ -178,12 +178,5 @@ project-root/
 
 ## ✍️ Author
 
-> Program by \[Your Name]
+
 > For academic, educational, or internal project use.
-
-```
-
----
-
-Would you like me to **generate this README.md file for download** or **render the markdown** with styles for a GitHub-style preview?
-```
