@@ -1,16 +1,26 @@
 package Menu;
 
-import java.time.LocalDate;
-import java.util.Scanner;
-import Menu.addExpenditure;
+import DSA.linkedList;
+import DSA.arrayList;
 import Menu.addExpenditure.Expenditure;
 
-import static Menu.addExpenditure.expenditureMap;
-import static Menu.addExpenditure.historyList;
+import java.io.BufferedReader;
+import java.io.FileReader;
+import java.time.LocalDate;
+import java.util.Scanner;
+
+// Remove the import below if not using shared data
+// import static Menu.addExpenditure.expenditureMap;
+// import static Menu.addExpenditure.historyList;
 
 public class viewExpenditure {
 
+    private static final linkedList historyList = new linkedList();
+    private static final MyMap expenditureMap = new MyMap();
+
     public static void searchExpenditure() {
+        loadExpendituresFromFile(); // Load data from txt file
+
         Scanner s = new Scanner(System.in);
 
         while (true) {
@@ -50,6 +60,44 @@ public class viewExpenditure {
         }
     }
 
+    private static void loadExpendituresFromFile() {
+        try (BufferedReader reader = new BufferedReader(new FileReader("Menu/expenditures.txt"))) {
+            String line;
+            String code = null, category = null, account = null, phase = null;
+            double amount = 0;
+            LocalDate date = null;
+
+            while ((line = reader.readLine()) != null) {
+                line = line.trim();
+                if (line.startsWith("Code:")) {
+                    code = line.substring(5).trim();
+                } else if (line.startsWith("Amount:")) {
+                    amount = Double.parseDouble(line.substring(7).trim());
+                } else if (line.startsWith("Date:")) {
+                    date = LocalDate.parse(line.substring(5).trim());
+                } else if (line.startsWith("Phase:")) {
+                    phase = line.substring(6).trim();
+                } else if (line.startsWith("Category:")) {
+                    category = line.substring(9).trim();
+                } else if (line.startsWith("Account:")) {
+                    account = line.substring(8).trim();
+                    if (code != null) {
+                        Expenditure e = new Expenditure(code, amount, date, phase, category, account);
+                        expenditureMap.put(code, e);
+                        historyList.addLast(code);
+
+                        // reset for next entry
+                        code = category = account = phase = null;
+                        amount = 0;
+                        date = null;
+                    }
+                }
+            }
+        } catch (Exception e) {
+            System.out.println("❌ Error reading file: " + e.getMessage());
+        }
+    }
+
     private static void listChronological() {
         System.out.println("\n📅 Expenditure in Chronological Order:");
         for (String code : historyList.toArray()) {
@@ -62,20 +110,23 @@ public class viewExpenditure {
 
     private static void sortByCategory() {
         String[] codes = historyList.toArray();
-        for (int i = 0; i < codes.length - 1; i++) {
-            for (int j = i + 1; j < codes.length; j++) {
-                Expenditure e1 = expenditureMap.get(codes[i]);
-                Expenditure e2 = expenditureMap.get(codes[j]);
+        arrayList<String> sortedCodes = new arrayList<>();
+
+        for (String code : codes) sortedCodes.add(code);
+
+        for (int i = 0; i < sortedCodes.size() - 1; i++) {
+            for (int j = i + 1; j < sortedCodes.size(); j++) {
+                Expenditure e1 = expenditureMap.get(sortedCodes.get(i));
+                Expenditure e2 = expenditureMap.get(sortedCodes.get(j));
                 if (e1.category.compareToIgnoreCase(e2.category) > 0) {
-                    String temp = codes[i];
-                    codes[i] = codes[j];
-                    codes[j] = temp;
+                    sortedCodes.swap(i, j);
                 }
             }
         }
+
         System.out.println("\n📂 Sorted by Category:");
-        for (String code : codes) {
-            System.out.println(expenditureMap.get(code) + "\n------------------");
+        for (int i = 0; i < sortedCodes.size(); i++) {
+            System.out.println(expenditureMap.get(sortedCodes.get(i)) + "\n------------------");
         }
     }
 
@@ -86,7 +137,7 @@ public class viewExpenditure {
             System.out.print("End Date (YYYY-MM-DD): ");
             LocalDate end = LocalDate.parse(s.nextLine().trim());
 
-            System.out.println("\n📆 Expenditure from " + start + " to " + end + ":");
+            System.out.println("\n📆 Expenditures from " + start + " to " + end + ":");
             for (String code : historyList.toArray()) {
                 Expenditure e = expenditureMap.get(code);
                 if (!e.date.isBefore(start) && !e.date.isAfter(end)) {
@@ -94,29 +145,63 @@ public class viewExpenditure {
                 }
             }
         } catch (Exception e) {
-            System.out.println("❌ Invalid date format.");
+            System.out.println("❌ Invalid date input.");
         }
     }
 
     private static void searchByCategory(Scanner s) {
-        System.out.print("Enter category to search: ");
-        String cat = s.nextLine().trim().toLowerCase();
+        System.out.print("Enter category: ");
+        String input = s.nextLine().trim().toLowerCase();
         for (String code : historyList.toArray()) {
             Expenditure e = expenditureMap.get(code);
-            if (e.category.toLowerCase().equals(cat)) {
+            if (e.category.toLowerCase().equals(input)) {
                 System.out.println(e + "\n------------------");
             }
         }
     }
 
     private static void searchByAccount(Scanner s) {
-        System.out.print("Enter account ID to search: ");
+        System.out.print("Enter account number: ");
         String acc = s.nextLine().trim();
         for (String code : historyList.toArray()) {
             Expenditure e = expenditureMap.get(code);
             if (e.accountId.equals(acc)) {
                 System.out.println(e + "\n------------------");
             }
+        }
+    }
+
+    // -------- Custom HashMap implementation (minimal) --------
+    private static class MyMap {
+        private final arrayList<Entry> entries = new arrayList<>();
+
+        private static class Entry {
+            String key;
+            Expenditure value;
+
+            Entry(String key, Expenditure value) {
+                this.key = key;
+                this.value = value;
+            }
+        }
+
+        void put(String key, Expenditure value) {
+            for (int i = 0; i < entries.size(); i++) {
+                if (entries.get(i).key.equals(key)) {
+                    entries.get(i).value = value;
+                    return;
+                }
+            }
+            entries.add(new Entry(key, value));
+        }
+
+        Expenditure get(String key) {
+            for (int i = 0; i < entries.size(); i++) {
+                if (entries.get(i).key.equals(key)) {
+                    return entries.get(i).value;
+                }
+            }
+            return null;
         }
     }
 }
