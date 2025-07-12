@@ -9,10 +9,6 @@ import java.io.FileReader;
 import java.time.LocalDate;
 import java.util.Scanner;
 
-// Remove the import below if not using shared data
-// import static Menu.addExpenditure.expenditureMap;
-// import static Menu.addExpenditure.historyList;
-
 public class viewExpenditure {
 
     private static final linkedList historyList = new linkedList();
