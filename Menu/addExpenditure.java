@@ -1,3 +1,5 @@
+package Menu;
+
 import java.io.FileWriter;
 import java.io.IOException;
 import java.time.LocalDate;
@@ -90,7 +92,7 @@ public class addExpenditure {
 
     // Save in readable format for .txt (optional)
     private static void saveToFile(Expenditure e) {
-        try (FileWriter writer = new FileWriter("expenditures.txt", true)) {
+        try (FileWriter writer = new FileWriter("Menu/expenditures.txt", true)) {
             writer.write(e.toString() + "\n\n"); // Pretty print version
         } catch (IOException ex) {
             System.out.println("⚠️ Failed to write to file: " + ex.getMessage());
