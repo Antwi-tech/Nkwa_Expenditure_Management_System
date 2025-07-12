@@ -1,22 +1,36 @@
 package DSA;
 
 public class linkedList {
-    // Node inner class
+    public String[] toArray() {
+        int count = 0;
+        Node current = head;
+        while (current != null) {
+            count++;
+            current = current.next;
+        }
+
+        String[] arr = new String[count];
+        current = head;
+        int i = 0;
+        while (current != null) {
+            arr[i++] = current.data;
+            current = current.next;
+        }
+        return arr;
+    }
+
     static class Node {
-        int data;
+        String data;
         Node next;
 
-        Node(int data) {
+        Node(String data) {
             this.data = data;
-            this.next = null;
         }
     }
 
-    // Head of the list
     private Node head;
 
-    // Add node at the end
-    public void addLast(int data) {
+    public void addLast(String data) {
         Node newNode = new Node(data);
         if (head == null) {
             head = newNode;
@@ -24,73 +38,18 @@ public class linkedList {
         }
 
         Node current = head;
-        while (current.next != null) {
+        while (current.next != null)
             current = current.next;
-        }
         current.next = newNode;
     }
 
-    // Add node at the beginning
-    public void addFirst(int data) {
-        Node newNode = new Node(data);
-        newNode.next = head;
-        head = newNode;
-    }
-
-    // Delete node by value
-    public void delete(int data) {
-        if (head == null) return;
-
-        if (head.data == data) {
-            head = head.next;
-            return;
-        }
-
-        Node current = head;
-        while (current.next != null && current.next.data != data) {
-            current = current.next;
-        }
-
-        if (current.next != null) {
-            current.next = current.next.next;
-        }
-    }
-
-    // Search for a node
-    public boolean search(int data) {
-        Node current = head;
-        while (current != null) {
-            if (current.data == data) return true;
-            current = current.next;
-        }
-        return false;
-    }
-
-    // Print the list
     public void printList() {
         Node current = head;
+        System.out.print("Expenditure History: ");
         while (current != null) {
             System.out.print(current.data + " -> ");
             current = current.next;
         }
         System.out.println("null");
     }
-/*
-    // Main method for testing
-    public static void main(String[] args) {
-        linkedList list = new linkedList();
-
-        list.addLast(10);
-        list.addLast(20);
-        list.addFirst(5);
-        list.printList(); // 5 -> 10 -> 20 -> null
-
-        list.delete(10);
-        list.printList(); // 5 -> 20 -> null
-
-        System.out.println("Search 20: " + list.search(20)); // true
-        System.out.println("Search 10: " + list.search(10)); // false
-    }
-}
- */
 }
