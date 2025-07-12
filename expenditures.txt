@@ -1,0 +1,14 @@
+Code: 2233
+Amount: 2489.0
+Date: 2025-12-11
+Phase: Sales
+Category: Cement
+Account: 1400007253216
+
+Code: 4433
+Amount: 230.0
+Date: 2025-04-03
+Phase: Sales
+Category: Cement
+Account: 14000073216
+
