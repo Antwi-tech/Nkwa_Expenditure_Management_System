@@ -1,3 +1,5 @@
+import java.io.FileWriter;
+import java.io.IOException;
 import java.time.LocalDate;
 import java.time.format.DateTimeParseException;
 import java.util.Scanner;
@@ -31,45 +33,71 @@ public class addExpenditure {
             return "Code: " + code + "\nAmount: " + amount + "\nDate: " + date +
                     "\nPhase: " + phase + "\nCategory: " + category + "\nAccount: " + accountId;
         }
+
+        public String toCSV() {
+            return code + "," + amount + "," + date + "," + phase + "," + category + "," + accountId;
+        }
     }
 
     public static void spending() {
         Scanner s = new Scanner(System.in);
-        System.out.println("\n----- Fill Up All Fields -----");
 
-        String code = getValidInput(s, "Item code", input -> !input.isEmpty());
+        while (true) {
+            System.out.println("\n----- Fill Up All Fields -----");
 
-        double amount = getValidDouble(s, "Amount", input -> input >= 0);
+            String code = getValidInput(s, "Item code", input -> !input.isEmpty());
 
-        LocalDate date = getValidDate(s, "Date of issue (YYYY‑MM‑DD)");
+            double amount = getValidDouble(s, "Amount", input -> input >= 0);
 
-        String phase = getValidInput(s, "Phase (Construction/Marketing/Sales)", input ->
-                input.equalsIgnoreCase("construction") ||
-                        input.equalsIgnoreCase("marketing") ||
-                        input.equalsIgnoreCase("sales"));
+            LocalDate date = getValidDate(s, "Date of issue (YYYY‑MM‑DD)");
 
-        String category = getValidInput(s, "Category", input -> !input.isEmpty());
+            String phase = getValidInput(s, "Phase (Construction/Marketing/Sales)", input -> {
+                String p = input.toLowerCase();
+                return p.equals("construction") || p.equals("marketing") || p.equals("sales");
+            });
 
-        String account = getValidInput(s, "Bank Account ID", input -> !input.isEmpty());
+            String category = getValidInput(s, "Category", input -> !input.isEmpty());
 
-        Expenditure e = new Expenditure(
-                code,
-                amount,
-                date,
-                capitalize(phase),
-                capitalize(category),
-                account
-        );
+            String account = getValidInput(s, "Bank Account ID", input -> !input.isEmpty());
 
-        expenditureMap.put(code, e);
-        historyList.addLast(code);
+            Expenditure e = new Expenditure(
+                    code,
+                    amount,
+                    date,
+                    capitalize(phase),
+                    capitalize(category),
+                    account
+            );
 
-        System.out.println("\n✅ Expenditure Added Successfully!\n");
-        expenditureMap.printAll();
-        historyList.printList();
+            expenditureMap.put(code, e);
+            historyList.addLast(code);
+
+            saveToFile(e);
+
+            System.out.println("\n✅ Expenditure Added Successfully!\n");
+
+            expenditureMap.printAll();
+            historyList.printList();
+
+            System.out.print("\n➕ Add another expenditure? (yes/no): ");
+            String again = s.nextLine().trim().toLowerCase();
+            if (!again.equals("yes")) {
+                System.out.println("👋 Exiting. Goodbye!");
+                break;
+            }
+        }
     }
 
-    // Utility to retry string input
+    // Save each entry to a file
+    private static void saveToFile(Expenditure e) {
+        try (FileWriter writer = new FileWriter("expenditures.csv", true)) {
+            writer.write(e.toCSV() + "\n");
+        } catch (IOException ex) {
+            System.out.println("⚠️ Failed to write to file: " + ex.getMessage());
+        }
+    }
+
+    // Input validators
     private static String getValidInput(Scanner s, String prompt, java.util.function.Predicate<String> isValid) {
         int attempts = 0;
         while (attempts < 3) {
@@ -81,10 +109,9 @@ public class addExpenditure {
         }
         System.out.println("❌ Too many invalid attempts. Exiting.");
         System.exit(0);
-        return null; // unreachable
+        return null;
     }
 
-    // Utility to retry double input
     private static double getValidDouble(Scanner s, String prompt, java.util.function.DoublePredicate isValid) {
         int attempts = 0;
         while (attempts < 3) {
@@ -100,10 +127,9 @@ public class addExpenditure {
         }
         System.out.println("❌ Too many invalid attempts. Exiting.");
         System.exit(0);
-        return -1; // unreachable
+        return -1;
     }
 
-    // Utility to retry date input
     private static LocalDate getValidDate(Scanner s, String prompt) {
         int attempts = 0;
         while (attempts < 3) {
@@ -117,10 +143,9 @@ public class addExpenditure {
         }
         System.out.println("❌ Too many invalid attempts. Exiting.");
         System.exit(0);
-        return null; // unreachable
+        return null;
     }
 
-    // Capitalize helper
     private static String capitalize(String str) {
         if (str == null || str.isEmpty()) return str;
         return str.substring(0, 1).toUpperCase() + str.substring(1).toLowerCase();
