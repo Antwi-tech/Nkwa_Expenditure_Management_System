@@ -1,4 +1,5 @@
 import Menu.addExpenditure;
+import Menu.viewExpenditure;
 
 import java.util.Scanner;
 
@@ -15,10 +16,9 @@ public class Expenditure_Management_System {
 
         switch (choice) {
             case 1:
-            addExpenditure.spending();
-
+                addExpenditure.spending();
             case 2:
-//                mm
+                viewExpenditure.searchExpenditure();
             case 3:
 //                mmww
             case 4:
