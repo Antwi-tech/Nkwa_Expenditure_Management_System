@@ -1,9 +1,7 @@
-package src;
 import java.util.Scanner;
-import menu_list.*;
 
-import static java.awt.SystemColor.menu;
-
+public class Expenditure_Management_System {
+    public static void main(String[] args) {
         Scanner input = new Scanner(System.in);
 
         System.out.println("------Welcome To Nkwa Tracking App------\n");
@@ -15,7 +13,17 @@ import static java.awt.SystemColor.menu;
 
         switch (choice) {
             case 1:
+            addExpenditure expense = new addExpenditure();
+            expense.spending();
 
+            case 2:
+//                mm
+            case 3:
+//                mmww
+            case 4:
+//                wwww
+            case 5:
+//                nkwkwk
 
         }
 
