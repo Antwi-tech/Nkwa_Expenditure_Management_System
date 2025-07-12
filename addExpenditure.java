@@ -88,14 +88,15 @@ public class addExpenditure {
         }
     }
 
-    // Save each entry to a file
+    // Save in readable format for .txt (optional)
     private static void saveToFile(Expenditure e) {
-        try (FileWriter writer = new FileWriter("expenditures.csv", true)) {
-            writer.write(e.toCSV() + "\n");
+        try (FileWriter writer = new FileWriter("expenditures.txt", true)) {
+            writer.write(e.toString() + "\n\n"); // Pretty print version
         } catch (IOException ex) {
             System.out.println("⚠️ Failed to write to file: " + ex.getMessage());
         }
     }
+
 
     // Input validators
     private static String getValidInput(Scanner s, String prompt, java.util.function.Predicate<String> isValid) {
