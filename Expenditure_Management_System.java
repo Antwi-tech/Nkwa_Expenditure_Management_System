@@ -1,3 +1,5 @@
+import Menu.addExpenditure;
+
 import java.util.Scanner;
 
 public class Expenditure_Management_System {
