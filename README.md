@@ -176,7 +176,4 @@ project-root/
 
 ---
 
-## ✍️ Author
-
-
 > For academic, educational, or internal project use.
