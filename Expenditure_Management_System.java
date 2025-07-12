@@ -13,8 +13,7 @@ public class Expenditure_Management_System {
 
         switch (choice) {
             case 1:
-            addExpenditure expense = new addExpenditure();
-            expense.spending();
+            addExpenditure.spending();
 
             case 2:
 //                mm
