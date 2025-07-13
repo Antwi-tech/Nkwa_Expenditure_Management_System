@@ -1,4 +1,5 @@
 import Menu.addExpenditure;
+import Menu.manageCategories;
 import Menu.viewExpenditure;
 
 import java.util.Scanner;
@@ -20,7 +21,7 @@ public class Expenditure_Management_System {
             case 2:
                 viewExpenditure.searchExpenditure();
             case 3:
-//                mmww
+                manageCategories.categories();
             case 4:
 //                wwww
             case 5:
