@@ -1,5 +1,5 @@
 package Menu;
-import java.util.Scanner
+import java.util.Scanner;
 
 public class manageCategories {
     public static void categories(){
