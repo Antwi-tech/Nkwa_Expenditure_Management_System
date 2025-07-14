@@ -5,6 +5,7 @@ import java.io.IOException;
 import java.time.LocalDate;
 import java.time.format.DateTimeParseException;
 import java.util.Scanner;
+
 import DSA.hashmap;
 import DSA.linkedList;
 
@@ -62,6 +63,56 @@ public class addExpenditure {
 
             String account = getValidInput(s, "Bank Account ID", input -> !input.isEmpty());
 
+            // 🔎 Check if the account exists in hashmap
+            bankAccount.BankAccount acc = bankAccount.accounts.get(account);
+
+            if (acc == null) {
+                System.out.println("❌ Account ID not found in accounts.txt.");
+                System.out.print("➕ Do you want to create it now? (yes/no): ");
+                String addNow = s.nextLine().trim().toLowerCase();
+
+                if (!addNow.equals("yes")) {
+                    System.out.println("⛔ Cannot proceed without a valid account.");
+                    return;
+                }
+
+                System.out.print("Enter Account Name: ");
+                String name = s.nextLine();
+
+                double initialBalance;
+                while (true) {
+                    try {
+                        System.out.print("Enter Initial Balance: ");
+                        initialBalance = Double.parseDouble(s.nextLine().trim());
+                        break;
+                    } catch (NumberFormatException e) {
+                        System.out.println("❌ Invalid number. Try again.");
+                    }
+                }
+
+                acc = new bankAccount.BankAccount(account, name, initialBalance);
+                bankAccount.accounts.put(account, acc);
+                bankAccount.queue.add(acc);
+                bankAccount.writeAllAccountsToFile();
+                System.out.println("✅ Account created with balance: " + initialBalance);
+            }
+
+
+            // 💰 Deduct balance or confirm if insufficient
+            if (acc.balance < amount) {
+                System.out.println("⚠️ Warning: Insufficient funds. Proceed with negative balance? (yes/no): ");
+                String proceed = s.nextLine().trim().toLowerCase();
+                if (!proceed.equals("yes")) {
+                    System.out.println("❌ Expenditure not recorded.");
+                    return;
+                }
+            }
+
+            acc.balance -= amount;
+            acc.history.addLast("Expenditure: -" + amount + " (" + code + ")");
+            bankAccount.writeAllAccountsToFile();
+
+            // 📝 Create and log expenditure
             Expenditure e = new Expenditure(
                     code,
                     amount,
@@ -90,15 +141,14 @@ public class addExpenditure {
         }
     }
 
-    // Save in readable format for .txt (optional)
+    // Save in readable format for .txt
     private static void saveToFile(Expenditure e) {
         try (FileWriter writer = new FileWriter("Menu/expenditures.txt", true)) {
-            writer.write(e.toString() + "\n\n"); // Pretty print version
+            writer.write(e.toString() + "\n\n");
         } catch (IOException ex) {
             System.out.println("⚠️ Failed to write to file: " + ex.getMessage());
         }
     }
-
 
     // Input validators
     private static String getValidInput(Scanner s, String prompt, java.util.function.Predicate<String> isValid) {
