@@ -1,10 +1,10 @@
 package DSA;
 
 public class hashmap<K, V> {
-       static class Node<K, V> {
+       public static class Node<K, V> {
               K key;
-              V value;
-              Node<K, V> next;
+              public V value;
+              public Node<K, V> next;
 
               Node(K key, V value) {
                      this.key = key;
@@ -13,7 +13,7 @@ public class hashmap<K, V> {
        }
 
        private final int SIZE = 16;
-       private Node<K, V>[] buckets;
+       public Node<K, V>[] buckets;
 
        @SuppressWarnings("unchecked")
        public hashmap() {
