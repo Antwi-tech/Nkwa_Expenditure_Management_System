@@ -12,3 +12,17 @@ Phase: Sales
 Category: Cement
 Account: 14000073216
 
+Code: 2345
+Amount: 789.0
+Date: 1025-06-08
+Phase: Sales
+Category: Iron rod
+Account: 445986124478
+
+Code: 4578
+Amount: 5600.0
+Date: 2025-04-04
+Phase: Sales
+Category: Pins
+Account: 3467097634765
+
