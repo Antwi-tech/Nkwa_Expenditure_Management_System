@@ -1,4 +1,5 @@
 import Menu.addExpenditure;
+import Menu.bankAccount;
 import Menu.manageCategories;
 import Menu.viewExpenditure;
 
@@ -23,7 +24,7 @@ public class Expenditure_Management_System {
             case 3:
                 manageCategories.categories();
             case 4:
-//                wwww
+                bankAccount.account();
             case 5:
 //                nkwkwk
 
