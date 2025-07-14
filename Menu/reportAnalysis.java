@@ -1,9 +1,6 @@
 package Menu;
 
-import DSA.arrayList;
-import DSA.hashmap;
-import DSA.myTreeMap;
-
+import DSA.*;
 import java.io.BufferedReader;
 import java.io.FileReader;
 import java.io.IOException;
@@ -13,119 +10,86 @@ import java.util.Scanner;
 
 public class reportAnalysis {
     public static void report() {
-        System.out.println("""
+        Scanner s = new Scanner(System.in);
+        String choice;
+
+        while (true) {
+            System.out.println("""
+            \n📊 Report & Analytics Menu:
             1. Monthly burn‑rate
             2. Profitability forecast
-            3. Material/Category price impact""");
+            3. Material/Category price impact
+            4. Exit to Main Menu\n: """);
 
-        Scanner s = new Scanner(System.in);
-        String choice = s.nextLine();
-        switch (choice) {
-            case "1" -> monthlyReport();
-            case "2" -> profitReport();
-            case "3" -> categoryPriceReport();
-            default -> System.out.println("Invalid choice.");
-        }
-    }
+            choice = s.nextLine().trim();
 
-    static class ExpenditureEntry {
-        double amount;
-        String category;
-        LocalDate date;
-
-        ExpenditureEntry(double amount, String category, LocalDate date) {
-            this.amount = amount;
-            this.category = category;
-            this.date = date;
-        }
-    }
-
-    private static arrayList<ExpenditureEntry> readExpenditures() {
-        arrayList<ExpenditureEntry> entries = new arrayList<>();
-
-        try (BufferedReader br = new BufferedReader(new FileReader("Menu/expenditures.txt"))) {
-            String line;
-            double amount = 0;
-            String category = null;
-            LocalDate date = null;
-
-            while ((line = br.readLine()) != null) {
-                if (line.startsWith("Amount: ")) {
-                    amount = Double.parseDouble(line.substring(8).trim());
-                } else if (line.startsWith("Category: ")) {
-                    category = line.substring(10).trim();
-                } else if (line.startsWith("Date: ")) {
-                    date = LocalDate.parse(line.substring(6).trim());
-                } else if (line.trim().isEmpty() && category != null && date != null) {
-                    entries.add(new ExpenditureEntry(amount, category, date));
-                    amount = 0;
-                    category = null;
-                    date = null;
+            switch (choice) {
+                case "1" -> monthlyReport();
+                case "2" -> profitReport();
+                case "3" -> categoryPriceReport();
+                case "4" -> {
+                    System.out.println("↩️ Returning to main menu...");
+                    return;
                 }
+                default -> System.out.println("❌ Invalid choice. Please try again.");
             }
-        } catch (IOException e) {
-            System.out.println("⚠️ Error reading expenditures file: " + e.getMessage());
         }
-
-        return entries;
     }
 
     public static void monthlyReport() {
-        arrayList<ExpenditureEntry> entries = readExpenditures();
         myTreeMap tree = new myTreeMap();
-        double total = 0;
 
-        for (int i = 0; i < entries.size(); i++) {
-            ExpenditureEntry entry = entries.get(i);
-            YearMonth ym = YearMonth.from(entry.date);
-            tree.put(ym, entry.amount);
-            total += entry.amount;
-        }
+        try (BufferedReader br = new BufferedReader(new FileReader("Menu/expenditures.txt"))) {
+            String line, code = null;
+            double amount = 0;
+            LocalDate date = null;
 
-        System.out.println("\n📅 Monthly Burn-rate:");
-        tree.printInOrder();
-        System.out.printf("\n🔎 Total Burn: GHS %.2f\n", total);
-        double avg = total / entries.size();
-        System.out.printf("📉 Average Spend per Entry: GHS %.2f\n", avg);
+            while ((line = br.readLine()) != null) {
+                if (line.startsWith("Code: ")) code = line.substring(6).trim();
+                else if (line.startsWith("Amount: ")) amount = Double.parseDouble(line.substring(8).trim());
+                else if (line.startsWith("Date: ")) date = LocalDate.parse(line.substring(6).trim());
+                else if (line.trim().isEmpty() && code != null && date != null) {
+                    YearMonth ym = YearMonth.from(date);
+                    tree.put(ym, amount);
+                    code = null; amount = 0; date = null;
+                }
+            }
 
-        if (avg > 200) {
-            System.out.println("⚠️ High burn rate detected. Consider budgeting strategies.");
-        } else {
-            System.out.println("✅ Burn rate is within a manageable range.");
+            System.out.println("\n📅 Monthly Burn-rate:");
+            tree.printInOrder();
+
+        } catch (IOException e) {
+            System.out.println("⚠️ Error reading file: " + e.getMessage());
         }
     }
 
     public static void profitReport() {
-        arrayList<ExpenditureEntry> entries = readExpenditures();
-        double total = 0;
-
-        for (int i = 0; i < entries.size(); i++) {
-            total += entries.get(i).amount;
-        }
-
-        double assumedIncome = 2000.00;
-        System.out.printf("\n📈 Assumed Monthly Income: GHS %.2f\n", assumedIncome);
-        System.out.printf("📉 Total Expenses: GHS %.2f\n", total);
-
-        if (total > assumedIncome) {
-            System.out.println("❌ Expenses exceed income. You are operating at a loss.");
-        } else {
-            System.out.println("✅ You're saving money monthly. Good job!");
-        }
+        System.out.println("💰 Profitability forecasting not yet implemented.");
     }
 
     public static void categoryPriceReport() {
-        arrayList<ExpenditureEntry> entries = readExpenditures();
         hashmap<String, Double> categoryTotals = new hashmap<>();
 
-        for (int i = 0; i < entries.size(); i++) {
-            ExpenditureEntry e = entries.get(i);
-            Double current = categoryTotals.get(e.category);
-            if (current == null) current = 0.0;
-            categoryTotals.put(e.category, current + e.amount);
-        }
+        try (BufferedReader br = new BufferedReader(new FileReader("Menu/expenditures.txt"))) {
+            String line, category = null;
+            double amount = 0;
 
-        System.out.println("\n📊 Category Price Impact:");
-        categoryTotals.printAll();
+            while ((line = br.readLine()) != null) {
+                if (line.startsWith("Category: ")) category = line.substring(10).trim();
+                else if (line.startsWith("Amount: ")) amount = Double.parseDouble(line.substring(8).trim());
+                else if (line.trim().isEmpty() && category != null) {
+                    Double currentTotal = categoryTotals.get(category);
+                    if (currentTotal == null) currentTotal = 0.0;
+                    categoryTotals.put(category, currentTotal + amount);
+                    category = null; amount = 0;
+                }
+            }
+
+            System.out.println("\n📊 Category Price Impact:");
+            categoryTotals.printAll();
+
+        } catch (IOException e) {
+            System.out.println("⚠️ Error reading file: " + e.getMessage());
+        }
     }
 }
