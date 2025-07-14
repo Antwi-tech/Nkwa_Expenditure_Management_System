@@ -3,6 +3,7 @@ package Menu;
 import DSA.hashset;
 import java.io.BufferedReader;
 import java.io.FileReader;
+import java.io.FileWriter;
 import java.io.IOException;
 import java.util.Scanner;
 
@@ -77,6 +78,7 @@ public class manageCategories {
             }
 
             categorySet.add(input);
+            saveCategoriesToFile(); // <-- Save to file
             System.out.println("✅ Category added!");
 
         } catch (Exception e) {
@@ -100,6 +102,7 @@ public class manageCategories {
             }
 
             categorySet.remove(input);
+            saveCategoriesToFile(); // <-- Save to file
             System.out.println("✅ Category deleted!");
 
         } catch (Exception e) {
@@ -108,19 +111,30 @@ public class manageCategories {
     }
 
     private static void loadCategoriesFromFile() throws IOException {
-        try (BufferedReader reader = new BufferedReader(new FileReader("Menu/expenditures.txt"))) {
+        try (BufferedReader reader = new BufferedReader(new FileReader("Menu/category.txt"))) {
             String line;
             while ((line = reader.readLine()) != null) {
                 line = line.trim();
-                if (line.toLowerCase().startsWith("category:")) {
-                    String category = line.substring(9).trim();
-                    if (!category.isEmpty()) {
-                        categorySet.add(category);
-                    }
+                if (!line.isEmpty()) {
+                    categorySet.add(line);
                 }
             }
         } catch (IOException e) {
-            throw new IOException("Cannot read from expenditures.txt. Make sure the file exists and is accessible.", e);
+            throw new IOException("Cannot read from category.txt. Make sure the file exists and is accessible.", e);
+        }
+    }
+
+    private static void saveCategoriesToFile() {
+        try (FileWriter writer = new FileWriter("Menu/category.txt")) {
+            for (int i = 0; i < hashset.SIZE; i++) {
+                DSA.hashset.Node node = categorySet.buckets[i];
+                while (node != null) {
+                    writer.write(node.value + "\n");
+                    node = node.next;
+                }
+            }
+        } catch (IOException e) {
+            System.out.println("⚠️ Failed to save categories to file: " + e.getMessage());
         }
     }
 }
