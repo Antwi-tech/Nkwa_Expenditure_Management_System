@@ -14,7 +14,8 @@ public class Expenditure_Management_System {
                     "3. Manage Categories\n" +
                     "4. Bank Accounts\n" +
                     "5. Reports & Analytics\n" +
-                    "6. Save & Exit\n: ");
+                    "6. Receipt\n" +
+                    "7. Save & Exit\n: ");
 
             String choice = input.nextLine().trim();
 
@@ -35,8 +36,14 @@ public class Expenditure_Management_System {
                     reportAnalysis.report();
                     break;
                 case "6":
+                    System.out.println("📎 Launching Receipt/Invoice Manager...");
+                    receipt.loadReceipt();
+                    break;
+
+                case "7":
                     System.out.println("✅ Progress saved. Exiting...");
                     System.exit(0);
+                    break;
                 default:
                     System.out.println("❌ Invalid choice. Please try again.");
             }

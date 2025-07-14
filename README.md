@@ -438,3 +438,324 @@ Bank Account ID: 555555555
 * Input validation ensures user-friendly experience.
 * All expenditure data is persistently stored and easily retrievable.
 
+
+
+
+-----------------
+Absolutely! Here's a **detailed README** explaining:
+
+1. How the `manageCategories` module works
+2. How the custom `hashset` is implemented and used
+3. How categories are loaded from `expenditures.txt`
+4. Error handling and safeguards
+
+---
+
+## 📝 `manageCategories` Module — README
+
+### 📂 Purpose:
+
+The `manageCategories` module is used to **manage expenditure categories**. It allows the user to:
+
+* View all unique categories used so far
+* Add a new category
+* Remove an existing category
+
+All categories are **automatically loaded** from the `expenditures.txt` file on startup.
+
+---
+
+### ✅ Features:
+
+| Feature                    | Description                                            |
+| -------------------------- | ------------------------------------------------------ |
+| `listcategories()`         | Prints all unique categories stored in the program     |
+| `addcategory()`            | Lets user add a new category (avoids duplicates)       |
+| `deletecategory()`         | Lets user remove an existing category                  |
+| `loadCategoriesFromFile()` | Extracts categories from the saved expenditure records |
+
+---
+
+### 📁 File Dependency:
+
+* `Menu/expenditures.txt` — must contain entries with lines like `Category: Food`
+  This file is parsed at the start to build a unique category list.
+
+---
+
+### 🧠 Internal Data Structure: `hashset`
+
+Categories are stored in a **custom HashSet implementation** called `hashset` in the `DSA` package.
+
+---
+
+## 🧱 `hashset` Implementation — How It Works
+
+This is a simplified version of Java’s built-in `HashSet`.
+
+### 💡 Key Concepts:
+
+* **Backed by an array of buckets**, each a linked list of entries (chaining)
+* **No duplicates** allowed — values are only added if not already present
+* **Hashing logic** is applied via `.hashCode()` on strings
+
+### 📦 Basic Structure
+
+```java
+public class hashset {
+    private class Node { String key; Node next; }
+    private Node[] buckets = new Node[16];
+    
+    public void add(String key);
+    public boolean contains(String key);
+    public void remove(String key);
+    public void printAll();
+}
+```
+
+---
+
+### ✅ `hashset` Operations
+
+| Method          | Description                                       |
+| --------------- | ------------------------------------------------- |
+| `add(key)`      | Adds a value to the set if it's not already there |
+| `contains(key)` | Checks whether a value exists in the set          |
+| `remove(key)`   | Deletes a value from the set if it exists         |
+| `printAll()`    | Displays all current values in the set            |
+
+---
+
+## 🧑‍💻 How It Works in `manageCategories`
+
+1. `hashset` is initialized as `categorySet`
+2. `loadCategoriesFromFile()` reads all `"Category: X"` lines from the expenditures file
+3. Each unique value is added to the set
+4. When the user wants to:
+
+  * List → `printAll()` from the set
+  * Add → check with `contains()`, then `add()`
+  * Delete → check with `contains()`, then `remove()`
+
+---
+
+## ⚠️ Error Handling & Safeguards
+
+| Area                  | How It’s Handled                                    |
+| --------------------- | --------------------------------------------------- |
+| File Read Errors      | Caught with `try-catch`, descriptive error printed  |
+| Input Validation      | Prompts user again if invalid or empty              |
+| Duplicate Additions   | Prevented using `contains()`                        |
+| Deleting Non-existent | Message shown instead of error                      |
+| Menu Selection        | Handles invalid numeric input with friendly message |
+
+---
+
+## 🧪 Sample Output
+
+```
+📂 Category Manager:
+1. List Categories
+2. Add Category
+3. Delete Category
+0. Back
+Choose an option: 1
+
+📋 Current Categories:
+→ Food
+→ Marketing
+→ Utilities
+→ Travel
+```
+
+---
+
+## 🗂️ Directory Structure Example
+
+```
+/DSA/
+ └── hashset.java
+
+/Menu/
+ ├── manageCategories.java
+ └── expenditures.txt
+```
+
+---
+
+## 🔚 Final Notes
+
+* You can integrate `manageCategories` with your main menu
+* If you want persistence (saving added/removed categories to a file), that can be implemented too — let me know!
+* The current `hashset` implementation is intentionally lightweight for clarity and educational purposes.
+
+---
+
+Here is a detailed **README** file that explains the structure, functionality, and usage of your project, including how the `bankAccount` class interacts with your custom `DSA` (Data Structure Algorithms) classes and file storage.
+
+---
+
+# 📘 Bank Account Management System — README
+
+## 📂 Project Structure
+
+This project simulates a **Bank Account Management System** using **custom-built data structures**:
+
+* `hashmap` — for storing account records by ID.
+* `linkedList` — for tracking expenditures per account.
+* `priorityqueue` — for identifying accounts with the lowest balances.
+
+All account data is persisted to a file `accounts.txt`.
+
+### 🗃 Packages:
+
+* `Menu` — contains the user-facing class `bankAccount`.
+* `DSA` — contains:
+
+  * `hashmap<K, V>`
+  * `linkedList`
+  * `priorityqueue<T>`
+  * `arrayList<T>` — supports the priority queue.
+
+---
+
+## 🧠 Features
+
+### `Menu.bankAccount`
+
+Handles **user interaction** and implements these features:
+
+| Option | Action          | Description                                                                            |
+| ------ | --------------- | -------------------------------------------------------------------------------------- |
+| 1      | `listaccount()` | Lists all accounts from `accounts.txt` and shows lowest balances using priority queue. |
+| 2      | `addaccount()`  | Adds a new account, writes to `accounts.txt`, stores in hashmap, tracks expenditures.  |
+| 3      | `topup()`       | Adds money to an account and updates `accounts.txt`.                                   |
+
+Accounts are stored in a custom-built `hashmap` using the `account ID` as the key. Each account:
+
+* Is a `BankAccount` object.
+* Contains a `linkedList` of expenditures.
+* Is inserted into a `priorityqueue` for balance-based alerts.
+
+---
+
+## 📄 File: `accounts.txt`
+
+Used to **persist** account information across sessions.
+
+**Structure per line**:
+
+```
+<accountID>,<accountName>,<balance>
+```
+
+### Example:
+
+```
+001,John Doe,1000.0
+002,Jane Smith,750.5
+```
+
+---
+
+## 🏗 Custom Data Structures (DSA Package)
+
+### ✅ `hashmap<K, V>`
+
+* Custom implementation with chaining for collisions.
+* Used to store account records (`<accountID> -> BankAccount`).
+
+### ✅ `linkedList`
+
+* Singly-linked list.
+* Stores expenditure logs for each account.
+* Methods:
+
+  * `addLast(String)`
+  * `printList()`
+  * `toArray()`
+
+### ✅ `priorityqueue<T extends Comparable<T>>`
+
+* Implements **Min-Heap**.
+* Used to always keep track of accounts with the **lowest balances**.
+* Supports:
+
+  * `add(T)`
+  * `poll()`
+  * `peek()`
+  * `printAll()`
+
+### ✅ `arrayList<T>`
+
+* Custom dynamic array used internally by `priorityqueue`.
+
+---
+
+## ⚙️ Usage
+
+1. Compile the project:
+
+   ```bash
+   javac Menu/*.java DSA/*.java
+   ```
+
+2. Run the main program that calls:
+
+   ```java
+   bankAccount.account();
+   ```
+
+3. Follow on-screen menu:
+
+   ```
+   1. List account
+   2. Add Account
+   3. Top-up
+   ```
+
+---
+
+## 🛠 Error Handling
+
+* ✅ File not found errors are handled when reading `accounts.txt`.
+* ✅ Input validations are done (e.g., balance must be a number).
+* ✅ Graceful messages on invalid account lookup or malformed lines.
+
+---
+
+## 🚀 Example Flow
+
+### Add Account:
+
+```
+Enter Account ID: 003
+Enter Name: Alice
+Enter Initial Balance: 500.0
+```
+
+→ Adds to `accounts.txt`, hashmap, linked list, and priority queue.
+
+### Top-up:
+
+```
+Enter Account ID: 003
+Enter Amount to Top-up: 100
+```
+
+→ Updates balance in `accounts.txt` and in-memory data structures.
+
+### List Accounts:
+
+→ Displays all accounts and shows top 3 accounts with **lowest balance** using priority queue.
+
+---
+
+## ✅ To Do / Extend
+
+* Add UI wrapper or CLI loop.
+* Add withdrawal and delete account options.
+* Save expenditure history to file (optional).
+
+---
+
