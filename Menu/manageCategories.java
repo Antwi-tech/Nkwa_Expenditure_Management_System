@@ -8,7 +8,7 @@ import java.io.IOException;
 import java.util.Scanner;
 
 public class manageCategories {
-    private static final hashset categorySet = new hashset();
+    static final hashset categorySet = new hashset();
 
     static {
         try {
@@ -137,4 +137,15 @@ public class manageCategories {
             System.out.println("⚠️ Failed to save categories to file: " + e.getMessage());
         }
     }
+    public static void addCategoryIfNew(String category) {
+        category = category.trim();
+        if (category.isEmpty()) return;
+
+        if (!categorySet.contains(category)) {
+            categorySet.add(category); // Add to memory
+            saveCategoriesToFile();    // Save to category.txt
+            System.out.println("📁 New category added to category.txt: " + category);
+        }
+    }
+
 }

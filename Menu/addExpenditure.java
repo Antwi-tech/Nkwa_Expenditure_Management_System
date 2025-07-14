@@ -60,10 +60,10 @@ public class addExpenditure {
             });
 
             String category = getValidInput(s, "Category", input -> !input.isEmpty());
+            manageCategories.addCategoryIfNew(category);  // ✅ THIS LINE ensures the category is saved
 
             String account = getValidInput(s, "Bank Account ID", input -> !input.isEmpty());
 
-            // 🔎 Check if the account exists in hashmap
             bankAccount.BankAccount acc = bankAccount.accounts.get(account);
 
             if (acc == null) {
@@ -97,8 +97,6 @@ public class addExpenditure {
                 System.out.println("✅ Account created with balance: " + initialBalance);
             }
 
-
-            // 💰 Deduct balance or confirm if insufficient
             if (acc.balance < amount) {
                 System.out.println("⚠️ Warning: Insufficient funds. Proceed with negative balance? (yes/no): ");
                 String proceed = s.nextLine().trim().toLowerCase();
@@ -112,7 +110,6 @@ public class addExpenditure {
             acc.history.addLast("Expenditure: -" + amount + " (" + code + ")");
             bankAccount.writeAllAccountsToFile();
 
-            // 📝 Create and log expenditure
             Expenditure e = new Expenditure(
                     code,
                     amount,
@@ -141,7 +138,6 @@ public class addExpenditure {
         }
     }
 
-    // Save in readable format for .txt
     private static void saveToFile(Expenditure e) {
         try (FileWriter writer = new FileWriter("Menu/expenditures.txt", true)) {
             writer.write(e.toString() + "\n\n");
@@ -150,7 +146,6 @@ public class addExpenditure {
         }
     }
 
-    // Input validators
     private static String getValidInput(Scanner s, String prompt, java.util.function.Predicate<String> isValid) {
         int attempts = 0;
         while (attempts < 3) {
@@ -202,5 +197,35 @@ public class addExpenditure {
     private static String capitalize(String str) {
         if (str == null || str.isEmpty()) return str;
         return str.substring(0, 1).toUpperCase() + str.substring(1).toLowerCase();
+    }
+
+    // ✅ NEW METHOD: Adds category to both file and in-memory hashset
+    private static void addCategoryIfNew(String category) {
+        category = capitalize(category.trim());
+        java.io.File file = new java.io.File("Menu/category.txt");
+
+        try {
+            if (!file.exists()) file.createNewFile();
+
+            boolean exists = false;
+            try (java.util.Scanner reader = new java.util.Scanner(file)) {
+                while (reader.hasNextLine()) {
+                    if (reader.nextLine().trim().equalsIgnoreCase(category)) {
+                        exists = true;
+                        break;
+                    }
+                }
+            }
+
+            if (!exists) {
+                try (FileWriter writer = new FileWriter(file, true)) {
+                    writer.write(category + "\n");
+                }
+                Menu.manageCategories.categorySet.add(category); // ✅ Add to memory
+            }
+
+        } catch (IOException e) {
+            System.out.println("⚠️ Failed to update category.txt: " + e.getMessage());
+        }
     }
 }
