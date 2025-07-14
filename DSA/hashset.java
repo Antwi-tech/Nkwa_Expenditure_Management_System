@@ -1,23 +1,24 @@
 package DSA;
 
 public class hashset {
-    private static final int SIZE = 16;
+    public static final int SIZE = 16; // ✅ Fixed: moved and defined only once
 
-    private static class Node {
-        String value;
-        Node next;
+    public static class Node {
+        public String value;
+        public Node next;
 
         Node(String value) {
             this.value = value;
         }
     }
 
-    private Node[] buckets;
+    public Node[] buckets;
 
     @SuppressWarnings("unchecked")
     public hashset() {
         buckets = new Node[SIZE];
     }
+
     private int getIndex(String value) {
         return Math.abs(value.hashCode()) % SIZE;
     }
