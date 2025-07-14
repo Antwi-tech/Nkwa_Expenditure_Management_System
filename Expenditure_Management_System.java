@@ -1,7 +1,4 @@
-import Menu.addExpenditure;
-import Menu.bankAccount;
-import Menu.manageCategories;
-import Menu.viewExpenditure;
+import Menu.*;
 
 import java.util.Scanner;
 
@@ -35,7 +32,7 @@ public class Expenditure_Management_System {
                     bankAccount.account();
                     break;
                 case "5":
-                    System.out.println("📊 Reports & Analytics feature coming soon!");
+                    reportAnalysis.report();
                     break;
                 case "6":
                     System.out.println("✅ Progress saved. Exiting...");
