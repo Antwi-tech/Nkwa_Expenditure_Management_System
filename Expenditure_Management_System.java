@@ -15,7 +15,8 @@ public class Expenditure_Management_System {
                     "4. Bank Accounts\n" +
                     "5. Reports & Analytics\n" +
                     "6. Receipt\n" +
-                    "7. Save & Exit\n: ");
+                    "7. Performance\n" +
+                    "8. Save & Exit\n: ");
 
             String choice = input.nextLine().trim();
 
@@ -40,9 +41,14 @@ public class Expenditure_Management_System {
                     receipt.loadReceipt();
                     break;
                 case "7":
+                    DSAPerformanceTest.run();
+                    break;
+
+                case "8":
                     System.out.println("✅ Progress saved. Exiting...");
                     System.exit(0);
                     break;
+
                 default:
                     System.out.println("❌ Invalid choice. Please try again.");
             }
