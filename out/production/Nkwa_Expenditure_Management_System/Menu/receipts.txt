@@ -1,5 +1,0 @@
-Expenditure: 5678
-Receipt: receipt.pdf
-Uploader: luke
-Status: Pending
----
