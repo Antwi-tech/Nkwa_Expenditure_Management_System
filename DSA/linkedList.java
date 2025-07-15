@@ -1,6 +1,29 @@
 package DSA;
 
 public class linkedList {
+    static class Node {
+        String data;
+        Node next;
+
+        Node(String data) {
+            this.data = data;
+        }
+    }
+
+    private Node head;
+    private Node tail; // ✅ Add tail pointer
+
+    public void addLast(String data) {
+        Node newNode = new Node(data);
+        if (head == null) {
+            head = newNode;
+            tail = newNode; // ✅ Set tail
+        } else {
+            tail.next = newNode; // ✅ Use tail
+            tail = newNode;
+        }
+    }
+
     public String[] toArray() {
         int count = 0;
         Node current = head;
@@ -17,30 +40,6 @@ public class linkedList {
             current = current.next;
         }
         return arr;
-    }
-
-    static class Node {
-        String data;
-        Node next;
-
-        Node(String data) {
-            this.data = data;
-        }
-    }
-
-    private Node head;
-
-    public void addLast(String data) {
-        Node newNode = new Node(data);
-        if (head == null) {
-            head = newNode;
-            return;
-        }
-
-        Node current = head;
-        while (current.next != null)
-            current = current.next;
-        current.next = newNode;
     }
 
     public void printList() {
