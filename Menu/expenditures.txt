@@ -47,3 +47,17 @@ Phase: Marketing
 Category: Rod
 Account: 1400007253216
 
+Code: 234
+Amount: 234.0
+Date: 2025-07-16
+Phase: Marketing
+Category: Rod
+Account: 1400007253216
+
+Code: 234
+Amount: 567.0
+Date: 2025-07-15
+Phase: Sales
+Category: Water
+Account: 11303045455454
+
