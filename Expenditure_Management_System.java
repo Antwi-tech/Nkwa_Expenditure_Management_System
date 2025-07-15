@@ -39,7 +39,6 @@ public class Expenditure_Management_System {
                     System.out.println("📎 Launching Receipt/Invoice Manager...");
                     receipt.loadReceipt();
                     break;
-
                 case "7":
                     System.out.println("✅ Progress saved. Exiting...");
                     System.exit(0);
@@ -47,6 +46,8 @@ public class Expenditure_Management_System {
                 default:
                     System.out.println("❌ Invalid choice. Please try again.");
             }
+
+
         }
     }
 }
