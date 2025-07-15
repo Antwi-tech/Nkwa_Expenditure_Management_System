@@ -7,8 +7,8 @@ import DSA.linkedList;
 import DSA.stack;
 import DSA.priorityqueue;
 import DSA.myTreeMap;
-
 import java.time.YearMonth;
+
 
 public class DSAPerformanceTest {
     public static void run() {
@@ -88,11 +88,18 @@ public class DSAPerformanceTest {
     }
 
     private static void testTreeMap() {
-        myTreeMap tm = new myTreeMap();
-        long s = System.nanoTime();
-        for (int i=0;i<5000;i++)
-            tm.put(YearMonth.parse("k"+(i%100)), i);
-        long e = System.nanoTime();
-        System.out.println("myTreeMap put/update (5k): " + (e-s)/1e6 + " ms");
+        myTreeMap reportMap = new myTreeMap();
+        System.out.println("\n📈 Testing TreeMap (Reports by Month)...");
+
+        long start = System.nanoTime();
+        for (int i = 0; i < 10000; i++) {
+            // Generate rotating YearMonth keys
+            int year = 2020 + (i % 5);        // 2020 to 2024
+            int month = 1 + (i % 12);         // Month 1 to 12
+            YearMonth ym = YearMonth.of(year, month);
+            reportMap.put(ym, 10.0);
+        }
+        long end = System.nanoTime();
+        System.out.println("⏱ treeMap put/update (10k): " + ((end - start) / 1e6) + " ms");
     }
 }
